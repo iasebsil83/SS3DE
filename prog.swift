@@ -59,7 +59,7 @@ let STATE__GO_LEFT        :Int8 =  4
 let STATE__GO_RIGHT       :Int8 = -4
 let STATE__GO_UP          :Int8 =  5
 let STATE__GO_DOWN        :Int8 = -5
-var state :Int8 = STATE__IDLE
+var state                 :Int8 = STATE__IDLE
 
 
 
@@ -86,6 +86,8 @@ var state :Int8 = STATE__IDLE
 func SS3DE_event(_ event:UInt8){
 	switch(event){
 
+
+
 		case SS3DE_DISPLAY:
 
 			//red half-frame
@@ -95,6 +97,8 @@ func SS3DE_event(_ event:UInt8){
 				Int(3*SS3DE_width_2/2), Int(3*SS3DE_height_2/2),
 				SS3DE_EMPTY
 			)
+
+
 
 		case SS3DE_KEYBOARD:
 			if SS3DE_keyState == SS3DE_KEY_RELEASED {
@@ -194,11 +198,13 @@ func SS3DE_event(_ event:UInt8){
 						print("SS3DE stopped.")
 
 					default:
-						break;
+						break
 				}
 			}
 
-		case SS3DE_MOUSECLICK:
+
+
+		case SS3DE_MOUSE_CLICK:
 			if(SS3DE_mouseState == SS3DE_MOUSE_RELEASED){
 				print("Released mouse.")
 			}else{
@@ -210,12 +216,28 @@ func SS3DE_event(_ event:UInt8){
 					case SS3DE_RIGHT_BUTTON:
 						print("Right mouse button pressed at (\(SS3DE_mouseX)\(SS3DE_mouseY)).")
 					default:
-						break;
+						break
 				}
 			}
 
-		case SS3DE_MOUSEMOVE:
+
+
+		case SS3DE_MOUSE_MOVE:
 			print("Moved mouse in (\(SS3DE_mouseX),\(SS3DE_mouseY)).")
+
+
+
+		case SS3DE_MOUSE_SCROLL:
+			switch(SS3DE_mouseScroll){
+				case SS3DE_SCROLL_UP:
+					print("Scrolling up at (\(SS3DE_mouseX),\(SS3DE_mouseY)).")
+				case SS3DE_SCROLL_DOWN:
+					print("Scrolling down at (\(SS3DE_mouseX),\(SS3DE_mouseY)).");
+				default:
+					break
+			}
+
+
 
 		case SS3DE_TIMER:
 
@@ -246,15 +268,19 @@ func SS3DE_event(_ event:UInt8){
 					SS3DE_goStraight(positionStep, SS3DE_DOWN)
 
 				default:
-					break;
+					break
 			}
 			SS3DE_refresh()
+
+
 
 		case SS3DE_RESIZE:
 			print("Resized screen from (\(SS3DE_width),\(SS3DE_height)) to (\(SS3DE_newWidth),\(SS3DE_newHeight)).")
 
+
+
 		default:
-			break;
+			break
 	}
 }
 
@@ -280,7 +306,7 @@ func SS3DE_event(_ event:UInt8){
 // ---------------- EXECUTION ----------------
 
 //init SS3DE
-SS3DE_init("SS3DE [0.1.0]", 1280,640)
+SS3DE_init("SS3DE [0.1.1]", 1280,640)
 SS3DE_setTimer(100)
 
 

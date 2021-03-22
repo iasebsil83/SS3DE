@@ -22,7 +22,7 @@ import Foundation
 
 
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SS3DE [0.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SS3DE [0.1.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         Simple Swift 3Dimensional Engine
 
     Developped using freeglut3 (or just GLUT), a graphical 2D/3D engine.
@@ -46,8 +46,12 @@ import Foundation
     You can use SS3DE as a 3D engine, 2D engine or both as you want.
     BE CAREFUL ! Always add your plaks AFTER SS3DE_init()
 
-    [0.1.0] > 18/02/2021 :
+    18/02/2021 > [0.1.0] :
     - Created SS3DE.
+
+    22/03/2021 > [0.1.1] :
+    - Added SS3DE_MOUSE_SCROLL event.
+    - Removed some useless importations.
 
     BUGS : .
     NOTES : .
@@ -275,12 +279,13 @@ let SS3DE_KEY_CEDILLA_C  :UInt16 = 0x0e7
 
 
 //event constants
-let SS3DE_KEYBOARD   :UInt8 = 0
-let SS3DE_MOUSECLICK :UInt8 = 1
-let SS3DE_MOUSEMOVE  :UInt8 = 2
-let SS3DE_DISPLAY    :UInt8 = 3
-let SS3DE_RESIZE     :UInt8 = 4
-let SS3DE_TIMER      :UInt8 = 5
+let SS3DE_KEYBOARD     :UInt8 = 0
+let SS3DE_MOUSE_CLICK  :UInt8 = 1
+let SS3DE_MOUSE_MOVE   :UInt8 = 2
+let SS3DE_MOUSE_SCROLL :UInt8 = 3
+let SS3DE_DISPLAY      :UInt8 = 4
+let SS3DE_RESIZE       :UInt8 = 5
+let SS3DE_TIMER        :UInt8 = 6
 
 
 
@@ -290,6 +295,8 @@ let SS3DE_MOUSE_RELEASED :UInt8 = 1
 let SS3DE_LEFT_BUTTON    :UInt8 = 0
 let SS3DE_MIDDLE_BUTTON  :UInt8 = 1
 let SS3DE_RIGHT_BUTTON   :UInt8 = 2
+let SS3DE_SCROLL_UP      :UInt8 = 3
+let SS3DE_SCROLL_DOWN    :UInt8 = 4
 
 
 
@@ -358,22 +365,23 @@ var SS3DE_timedExecution_delay :Int32 = -1
 
 
 //event variables
-var SS3DE_mouseState  :UInt8 = 0 //mouse
-var SS3DE_mouseButton :UInt8 = 0
+var SS3DE_mouseState  :UInt8  = 0 //mouse
+var SS3DE_mouseButton :UInt8  = 0
+var SS3DE_mouseScroll :UInt8  = 0
 var SS3DE_mouseX      :UInt32 = 0
 var SS3DE_mouseY      :UInt32 = 0
-var SS3DE_keyState :UInt8  = 0 //keyboard
-var SS3DE_key      :UInt16 = 0
-var SS3DE_newWidth  :UInt32 = 0 //resize
-var SS3DE_newHeight :UInt32 = 0
-var SS3DE_width  :UInt32 = 0
-var SS3DE_height :UInt32 = 0
+var SS3DE_keyState    :UInt8  = 0 //keyboard
+var SS3DE_key         :UInt16 = 0
+var SS3DE_newWidth    :UInt32 = 0 //resize
+var SS3DE_newHeight   :UInt32 = 0
+var SS3DE_width       :UInt32 = 0
+var SS3DE_height      :UInt32 = 0
 
 
 
 //3D engine
-var SS3DE_width_2  :UInt32 = 0
-var SS3DE_height_2 :UInt32 = 0
+var SS3DE_width_2     :UInt32 = 0
+var SS3DE_height_2    :UInt32 = 0
 var SS3DE_colorBuffer :UnsafeMutableRawPointer? = nil
 var SS3DE_depthBuffer :UnsafeMutableRawPointer? = nil
 
@@ -999,52 +1007,47 @@ func S3DE_saveSTLfromPlaks(_ fileName:String){
 
 	//export
 	fprintf(f,"solid \n")
-	for p in 0..<S3DE_plaks.count {
-		current = S3DE_getPlak(p)->points;
+	for p in 0..<SS3DE_plaks.count {
+		var tempP = SS3DE_getPlak(p)
+		current = tempP.points
 		fprintf(f," facet normal %f %f %f\n", //                    ------------------->   ------------------->
 			Float(                          //vectorial product : current[0]current[1] ^ current[0]current[2]
 				(current[1].y - current[0].y)*(current[2].z - current[0].z) -
 				(current[1].z - current[0].z)*(current[2].y - current[0].y)
-			) / S3DE_STL_AMPLIFICATION,
+			) / SS3DE_STL_AMPLIFICATION,
 			Float(
 				(current[2].x - current[0].x)*(current[1].z - current[0].z) -
 				(current[2].z - current[0].z)*(current[1].x - current[0].x)
-			) / S3DE_STL_AMPLIFICATION,
+			) / SS3DE_STL_AMPLIFICATION,
 			Float(
 				(current[1].x - current[0].x)*(current[2].y - current[0].y) -
 				(current[1].y - current[0].y)*(current[2].x - current[0].x)
-			) / S3DE_STL_AMPLIFICATION
-		);
-		fprintf(f,"  outer loop\n");
+			) / SS3DE_STL_AMPLIFICATION
+		)
+		fprintf(f,"  outer loop\n")
 		fprintf(f,"  vertex %f %f %f\n",
-			(float)current[0].x / S3DE_STL_AMPLIFICATION,
-			(float)current[0].y / S3DE_STL_AMPLIFICATION,
-			(float)current[0].z / S3DE_STL_AMPLIFICATION
-		);
+			Float(current[0].x) / SS3DE_STL_AMPLIFICATION,
+			Float(current[0].y) / SS3DE_STL_AMPLIFICATION,
+			Float(current[0].z) / SS3DE_STL_AMPLIFICATION
+		)
 		fprintf(f,"  vertex %f %f %f\n",
-			(float)current[1].x / S3DE_STL_AMPLIFICATION,
-			(float)current[1].y / S3DE_STL_AMPLIFICATION,
-			(float)current[1].z / S3DE_STL_AMPLIFICATION
-		);
+			Float(current[1].x) / SS3DE_STL_AMPLIFICATION,
+			Float(current[1].y) / SS3DE_STL_AMPLIFICATION,
+			Float(current[1].z) / SS3DE_STL_AMPLIFICATION
+		)
 		fprintf(f,"  vertex %f %f %f\n",
-			(float)current[2].x / S3DE_STL_AMPLIFICATION,
-			(float)current[2].y / S3DE_STL_AMPLIFICATION,
-			(float)current[2].z / S3DE_STL_AMPLIFICATION
-		);
-		fprintf(f,"  endloop\n");
-		fprintf(f," endfacet\n\n");
+			Float(current[2].x) / SS3DE_STL_AMPLIFICATION,
+			Float(current[2].y) / SS3DE_STL_AMPLIFICATION,
+			Float(current[2].z) / SS3DE_STL_AMPLIFICATION
+		)
+		fprintf(f,"  endloop\n")
+		fprintf(f," endfacet\n\n")
 	}
-	fprintf(f,"endsolid \n");
+	fprintf(f,"endsolid \n")
 
 	//terminate
-	fflush(f);
-	fclose(f);
-
-	//debug message
-	#ifdef DEBUG_ON
-	printf("DEBUG > S3DE.c : S3DE_saveSTLfromPlaks() : ");
-	printf("Plaks have been exported into \"%s\".\n", fileName);
-	#endif
+	fflush(f)
+	fclose(f)
 }*/
 
 
@@ -1184,14 +1187,28 @@ func SS3DEL_mouseButton(_ button:Int32, _ state:Int32, _ x:Int32,_ y:Int32){
 	SS3DE_mouseX = UInt32(x)
 	SS3DE_mouseY = SS3DE_height - UInt32(y)
 	SS3DE_mouseState = UInt8(state)
-	SS3DE_mouseButton = UInt8(button)
-	SS3DE_event(SS3DE_MOUSECLICK)
+
+	//scroll
+	if button == 3 || button == 4 {
+		if state == SS3DE_MOUSE_PRESSED {
+			SS3DE_mouseScroll = UInt8(button)
+			SS3DE_event(SS3DE_MOUSE_SCROLL)
+		}
+	}else{
+		SS3DE_mouseButton = UInt8(button)
+		SS3DE_event(SS3DE_MOUSE_CLICK)
+	}
 }
 
 func SS3DEL_mouseMoved(_ x:Int32,_ y:Int32){
 	SS3DE_mouseX = UInt32(x)
 	SS3DE_mouseY = SS3DE_height - UInt32(y)
-	SS3DE_event(SS3DE_MOUSEMOVE)
+	usleep(UInt32(1))
+	if SS3DE_mouseScroll == 0 {
+		SS3DE_event(SS3DE_MOUSE_MOVE)
+	}else{
+		SS3DE_mouseScroll = UInt8(0)
+	}
 }
 
 
