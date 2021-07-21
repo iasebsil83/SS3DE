@@ -1,1 +1,1 @@
-All information about SS2DE are in SS2DE.swift
+All information about SS3DE are in src/SS3DE.swift

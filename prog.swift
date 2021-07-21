@@ -30,14 +30,6 @@
 
 
 
-
-
-
-
-
-
-
-
 // ----------------- DECLARATIONS ----------------
 
 // ---- global vars ----
@@ -60,14 +52,6 @@ let STATE__GO_RIGHT       :Int8 = -4
 let STATE__GO_UP          :Int8 =  5
 let STATE__GO_DOWN        :Int8 = -5
 var state                 :Int8 = STATE__IDLE
-
-
-
-
-
-
-
-
 
 
 
@@ -295,14 +279,6 @@ func SS3DE_event(_ event:UInt8){
 
 
 
-
-
-
-
-
-
-
-
 // ---------------- EXECUTION ----------------
 
 //init SS3DE
@@ -317,11 +293,11 @@ buildScene()
 
 
 //go in an interresting place + look at an interresting direction
-SS3DE_addAngleX(1.800000)
-SS3DE_addAngleY(6.499996)
-SS3DE_position.x = -200
-SS3DE_position.y =  600
-SS3DE_position.z = -1150
+SS3DE_addAngleX(-7.799995)
+SS3DE_addAngleY(-6.5999956)
+SS3DE_position.x = -100
+SS3DE_position.y = -150
+SS3DE_position.z = -2300
 
 
 

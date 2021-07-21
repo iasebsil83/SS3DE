@@ -14,14 +14,6 @@ import Foundation
 
 
 
-
-
-
-
-
-
-
-
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SS3DE [0.1.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         Simple Swift 3Dimensional Engine
 
@@ -53,7 +45,7 @@ import Foundation
     - Added SS3DE_MOUSE_SCROLL event.
     - Removed some useless importations.
 
-    BUGS : .
+    BUGS : It seems that only half of objects are correctly rendered.
     NOTES : .
 
     Contact     : i.a.sebsil83@gmail.com
@@ -78,14 +70,6 @@ import Foundation
 
     If not, see <https://www.gnu.org/licenses/>.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-
-
-
-
 
 
 
@@ -348,15 +332,7 @@ struct Plak{
 
 
 
-
-
-
-
-
-
-
-
-/// ---------------- INITIALIZATION ----------------
+// ---------------- INITIALISATION ----------------
 
 //window
 var SS3DE_window               :Int32 = -1
@@ -405,14 +381,6 @@ var SS3DE_FOV :Float = 0.001
 
 //plaks
 var SS3DE_plaks :[Plak] = [Plak]()
-
-
-
-
-
-
-
-
 
 
 
@@ -811,7 +779,7 @@ func SS3DE_getPlak(_ index:Int32) -> Plak? {
 
 
 
-/// ---------------- PLAKS / STL FILE CONVERSIONS ----------------
+// ---------------- PLAKS / STL FILE CONVERSIONS ----------------
 /*func SS3DE_strcmpN(_ s1:String, _ s2:String, _ N:Int32) -> Bool {
 
 	//error cases
@@ -1049,14 +1017,6 @@ func S3DE_saveSTLfromPlaks(_ fileName:String){
 	fflush(f)
 	fclose(f)
 }*/
-
-
-
-
-
-
-
-
 
 
 
@@ -1441,14 +1401,6 @@ func SS3DE_setTimer(_ ms:Int32){
 	//set new timedExecution delay
 	SS3DE_timedExecution_delay = ms
 }
-
-
-
-
-
-
-
-
 
 
 

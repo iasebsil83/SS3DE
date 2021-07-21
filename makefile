@@ -1,13 +1,14 @@
-run: include_GL.h prog.swift dog.stl.swift SS3DE.swift again
+#executable
+run: lib/include_GL.h prog.swift stl/dog.stl.swift src/SS3DE.swift again
 
 	@#create temporary all-in-one swift source file
-	@cat SS3DE.swift > run.swift
-	@cat dog.stl.swift >> run.swift
+	@cat src/SS3DE.swift > run.swift
+	@cat stl/dog.stl.swift >> run.swift
 	@cat prog.swift >> run.swift
 
 	@#compilation
-	@echo "compiling SS3DE.swift + dog.stl.swift + prog.swift"
-	swiftc run.swift -import-objc-header include_GL.h -I/usr/include/GL -lGL -lm -lglut -lX11
+	@echo "compiling src/SS3DE.swift + stl/dog.stl.swift + prog.swift"
+	swiftc run.swift -import-objc-header lib/include_GL.h -I/usr/include/GL -lGL -lm -lglut -lX11
 
 	@#remove temporary files
 	@rm -f run.swift again
